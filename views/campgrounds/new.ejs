@@ -1,0 +1,43 @@
+<% layout("layouts/boilerplate.ejs") %>
+
+<%# Container %> 
+<div class="row">
+    <h1 class="text-center">Create New Campground</h1>
+    <div class="col-6 offset-3">
+        <form action="/campgrounds", method="POST" novalidate class="validated-form" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label" for="title">Name</label>
+                <input class="form-control" type="text" id="title" placeholder="campground title" name="campground[title]" required>
+                <div class="valid-feedback">Looks good!</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="location">Location</label>
+                <input class="form-control" type="text" id="location" placeholder="location" name="campground[location]" required>
+                <div class="valid-feedback">Looks good!</div>
+
+            </div>
+            <input type="file" name="image" id="" multiple>
+            <!-- <div class="mb-3">
+                    <label for="photo" class="form-label">Photo</label>
+                    <input type="text" id="photoURL" class="form-control" placeholder="photo url" name="campground[image]" required>
+                    <div class="valid-feedback">Looks good!</div>
+            </div> -->
+            <div class="mb-3">
+                <label for="price" class="form-label">Campground Price</label>
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon1">$</span>
+                    <input type="text" class="form-control" placeholder="0.00" name="campground[price]" aria-label="price" aria-describedby="price-label" required>
+                    <div class="valid-feedback">Looks good!</div>
+                  </div>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <input type="text-area" id="description" class="form-control" placeholder="description" name="campground[description]" required>
+            </div>
+            <button class="btn btn-success">Add Campground</button>
+        </form>
+        <a href="/campgrounds">Back to All Campgrounds</a>
+</div>
+    
+</div>
+    
