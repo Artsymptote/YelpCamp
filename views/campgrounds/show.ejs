@@ -4,7 +4,10 @@
 <div class="row mb-3">
    <div class="col-6">
     <div class="card">
-        <img src="<%= campground.image %>" alt="random image with no connection to the campground" class="card-img-top" >
+      <% for(let image of campground.images) { %>
+        <img src="<%= image.url %>" alt="campground image" class="card-img-top" >
+        <% } %>
+        
         <div class="card-body">
           <h5 class="card-title"><%= campground.title %></h5>
           <p class="card-text text-muted"><%= campground.location %></p>

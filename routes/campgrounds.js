@@ -13,16 +13,13 @@ router
 	.route("/")
 	//Go to home page
 	.get(catchAsync(campgrounds.index))
-	.post(upload.array("image"), (req, res) => {
-		console.log(req.body, req.files);
-		res.send("success!");
-	});
-//Send new campground info to DB and redirect to detail page
-// .post(
-// 	isLoggedIn,
-// 	validateCampground,
-// 	catchAsync(campgrounds.createCampground),
-// )
+	//Send new campground info to DB and redirect to detail page
+	.post(
+		isLoggedIn,
+		upload.array("image"),
+		validateCampground,
+		catchAsync(campgrounds.createCampground),
+	);
 
 //Access the FORM for adding a new campground
 router.get("/new", storeReturnTo, isLoggedIn, campgrounds.renderNewForm);
