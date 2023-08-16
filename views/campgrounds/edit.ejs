@@ -4,7 +4,7 @@
 <div class="row">
     <h1 class="text-center">Update <%= campground.title %></h1>
     <div class="col-6 offset-3">
-        <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" class="validated-form" novalidate>
+        <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" class="validated-form" novalidate enctype="multipart/form-data">
 
             <%# NAME INPUT %>
             <div class="mb-3">
@@ -21,9 +21,9 @@
             </div>
 
             <%# PHOTO INPUT %>
-            <div class="mb-3">
-                    <label for="image" class="form-label">Image URL</label>
-                    <input class="form-control" type="text" id="image"  name="campground[image]" placeholder="image url" value="<%= campground.image %>">
+            <label for="form-label" for="image">Images</label>
+            <div class="input-group mb-3">
+                <input type="file" class="form-control" id="image" name="image" multiple>
                     <div class="valid-feedback" required>Looks good!</div>
 
             </div>

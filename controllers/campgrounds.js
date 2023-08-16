@@ -31,7 +31,6 @@ module.exports.showCampground = async (req, res, next) => {
 				path: "author",
 			},
 		});
-	console.log(campground.reviews);
 	if (!campground) {
 		req.flash("error", "Campground Not Found");
 		return res.redirect("/campgrounds");
@@ -57,6 +56,9 @@ module.exports.updateCampground = async (req, res, next) => {
 			runValidators: true,
 		},
 	);
+	const imgs = req.files.map((f) => ({ url: f.path, filename: f.filename }));
+	campground.images.push(...imgs);
+	await campground.save();
 	req.flash("success", "Successfully updated the campground!");
 	res.redirect(`/campgrounds/${campground._id}`); //uses specifically the ID that is on the campground object, not the one that was pulled from the req.params.
 };
