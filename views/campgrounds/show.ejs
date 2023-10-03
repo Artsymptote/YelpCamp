@@ -8,7 +8,7 @@
         <div class="carousel-inner">
           <% campground.images.forEach((img, i) => { %>
           <div class="carousel-item <%= i == 0 ? 'active':'' %>">
-            <img src="<%= img.url%>" class="d-block w-100" alt="...">
+            <img src="<%= img.sizedImage%>" class="d-block w-100" alt="...">
           </div>
           <% }) %>
         </div>
@@ -49,6 +49,7 @@
     </div>
   </div> 
   <div class="col-6">
+      <div id="map"></div>
     <% if (currentUser) { %> 
       <h2>Leave A Review</h2>
       <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
@@ -95,3 +96,10 @@
         <% } %>
   </div>
 </div>
+
+<script>
+  const mapToken = "<%- process.env.MAPBOX_TOKEN %>"; //this is just text (not even a string) in the .env file. In order to make it a string, we put quotes around the EJS tags.
+  const campground = <%- JSON.stringify(campground) %>; //makes the object a JSON string, then the no-escaping EJS tags "render the actual object" before it's associated with the variable.
+</script>
+
+<script src="/javascripts/showPageMap.js"></script>

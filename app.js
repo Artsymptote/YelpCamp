@@ -15,9 +15,12 @@ const userRoutes = require("./routes/users");
 const session = require("express-session");
 const flash = require("connect-flash");
 const User = require("./models/user");
-
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+
+const MongoDBStore = require("connect-mongo")(session);
 
 //* CREATE APP
 const app = express();
@@ -26,19 +29,88 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+//Setting up for app.use-ing sessionConfig.
+
+//for production:
+const dbUrl = process.env.DB_URL;
+
+//for lesson 587:
+// const dbUrl = "mongodb://localhost:27017/yelpcamp";
+
+const store = new MongoDBStore({
+	url: dbUrl,
+	secret: "thisisabadsecret",
+	touchAfter: 24 * 60 * 60,
+});
+
+store.on("error", function (e) {
+	console.log("SESSION STORE ERROR", e);
+});
 
 const sessionConfig = {
+	store,
+	name: "session",
 	secret: "thisisabadsecret",
 	resave: false,
 	saveUninitialized: true,
 	cookie: {
 		httpOnly: true,
+		//Un-comment-out the "secure" option when you deploy.
+		//secure: true,
 		maxAge: Date.now() + 1000 * 60 * 60 * 24 * 7,
 		expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
 	},
 };
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(mongoSanitize());
+
+app.use(helmet());
+//CSP code setup:
+const scriptSrcUrls = [
+	"https://kit.fontawesome.com/",
+	"https://cdn.jsdelivr.net",
+	"https://api.mapbox.com/",
+	"https://api.tiles.mapbox.com/",
+	"https://cdnjs.cloudflare.com/",
+];
+const styleSrcUrls = [
+	"https://kit-free.fontawesome.com/",
+	"https://cdn.jsdelivr.net",
+	"https://api.mapbox.com/",
+	"https://api.tiles.mapbox.com/",
+	"https://fonts.googleapis.com/",
+	"https://use.fontawesome.com/",
+];
+const connectSrcUrls = [
+	"https://api.mapbox.com/",
+	"https://a.tiles.mapbox.com/",
+	"https://b.tiles.mapbox.com/",
+	"https://events.mapbox.com/",
+];
+const fontSrcUrls = [];
+app.use(
+	helmet.contentSecurityPolicy({
+		directives: {
+			defaultSrc: [],
+			connectSrc: ["'self'", ...connectSrcUrls],
+			scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+			styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+			workerSrc: ["'self'", "blob:"],
+			objectSrc: [],
+			imgSrc: [
+				"self",
+				"blob:",
+				"data:",
+				`https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/`, //put Cloudinary ID there
+				"https://images.unsplash.com/",
+				"https://source.unsplash.com/",
+			],
+			fontSrc: ["'self'", ...fontSrcUrls],
+			childSrc: ["blob:"],
+		},
+	}),
+);
 
 //Passport package configuration
 app.use(passport.initialize());
@@ -55,6 +127,7 @@ passport.deserializeUser(User.deserializeUser());
 //Response Locals
 //Flash Middleware (Must come BEFORE ROUTERS)
 app.use((req, res, next) => {
+	console.log(req.query);
 	res.locals.currentUser = req.user;
 	res.locals.success = req.flash("success");
 	res.locals.error = req.flash("error");
@@ -68,6 +141,7 @@ app.use("/campgrounds/:id/reviews", reviewRoutes);
 
 //* MONGOOSE Set-up & Connection
 const mongoose = require("mongoose");
+//mongoose.connect(dbUrl);
 mongoose.connect("mongodb://localhost:27017/yelpcamp");
 
 //* MONGOOSE naming connection & error handling
