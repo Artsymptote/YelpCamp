@@ -141,8 +141,10 @@ app.use("/campgrounds/:id/reviews", reviewRoutes);
 
 //* MONGOOSE Set-up & Connection
 const mongoose = require("mongoose");
-//mongoose.connect(dbUrl);
-mongoose.connect("mongodb://localhost:27017/yelpcamp");
+//Use this in production:
+mongoose.connect(dbUrl);
+//Use this in development:
+//mongoose.connect("mongodb://localhost:27017/yelpcamp");
 
 //* MONGOOSE naming connection & error handling
 const db = mongoose.connection; //mongoose.connection is Mongoose's term for its default connection, whichis what we have above.
