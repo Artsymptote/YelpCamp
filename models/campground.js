@@ -15,7 +15,7 @@ ImageSchema.virtual("thumbnail").get(function () {
 
 //Carousel images cropping virtual
 ImageSchema.virtual("sizedImage").get(function () {
-	return this.url.replace("/upload", "/upload/ar_4:3,c_crop");
+	return this.url.replace("/upload", "/upload/c_crop");
 });
 
 const opts = { toJSON: { virtuals: true } };
