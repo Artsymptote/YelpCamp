@@ -11,7 +11,9 @@
                     <div class="card">
                         <div class="row g-0">
                             <div class="col-md-4">
+                                <% if (campground.images.length) {%>
                                 <img class="card-img img-fluid" src="<%= campground.images[0].url %>">
+                                <% } %>
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
