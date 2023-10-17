@@ -7,7 +7,7 @@ const { isLoggedIn, isAuthor, validateCampground } = require("../middleware");
 const { storeReturnTo } = require("../middleware");
 const multer = require("multer");
 const { storage } = require("../cloudinary");
-const upload = multer({ storage, limits: { fileSize: 1024 * 1024 } }); //for some reason this allows up to 1MB. It doesn't only allow those dimensions.
+const upload = multer({ storage: storage, limits: { fileSize: 1024 * 1024 } }); //for some reason this allows up to 1MB. It doesn't only allow those dimensions.
 
 router
 	.route("/")
