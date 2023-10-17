@@ -112,7 +112,7 @@ app.use(
 	}),
 );
 
-//Passport package configuration
+//PASSPORT package configuration
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
